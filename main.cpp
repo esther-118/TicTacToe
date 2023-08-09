@@ -22,14 +22,14 @@ void checkOpponent () {
         empty = 0; // this will be used to know where to place the pin
         
         for (int j = 0; j < 3; j++) {
-            if (board[i][j] == 2) count++;
+            if (board[i][j] == 1) count++;
             if (board[i][j] == 0) empty = j;
         }
         if (count == 3) {
-            stateOfGame = 2;
+            stateOfGame = 1;
         }
         if (count == 2) {
-            board[i][empty] = 1;
+            board[i][empty] = 2;
             goto END;
         }
     }
@@ -40,14 +40,14 @@ void checkOpponent () {
         empty = 0; // this will be used to know where to place the pin
         int j = 0;
         for (j = 0; j < 3; j++) {
-            if (board[j][i] == 2) count++;
+            if (board[j][i] == 1) count++;
             if (board[j][i] == 0) empty = i;
         }
         if (count == 3) {
-            stateOfGame = 2;
+            stateOfGame = 1;
         }
         if (count == 2) {
-            board[j][empty] = 1;
+            board[j][empty] = 2;
             goto END;
         } 
     }
@@ -58,16 +58,16 @@ void checkOpponent () {
     empty = 0;
     emptyRow = 0;
     for (int i = 0; i < 3; i++) {
-        if (board[i][col] == 2) count++;
+        if (board[i][col] == 1) count++;
         if (board[i][col] == 0) {
             empty = col;
             emptyRow = i;
         }
         col++;
     }
-    if (count == 3) stateOfGame = 2;
+    if (count == 3) stateOfGame = 1;
     if (count == 2) {
-        board[emptyRow][empty] = 1;
+        board[emptyRow][empty] = 2;
         cout << emptyRow << col;
         goto END;
     }
@@ -78,19 +78,19 @@ void checkOpponent () {
     empty = 0;
     emptyRow = 0;
     for (int i = 0; i < 3; i++) {
-        if (board[i][col] == 2) count++;
+        if (board[i][col] == 1) count++;
         if (board[i][col] == 0) empty = i;
         col--;
     }
-    if (count == 3) stateOfGame = 2;
+    if (count == 3) stateOfGame = 1;
     if (count == 2) {
-        board[emptyRow][empty] = 1;
+        board[emptyRow][empty] = 2;
         goto END;
     }
 
     
     END:
-    if (stateOfGame == 2) cout << "Player 2 wins.";
+    if (stateOfGame == 1) cout << "Player 1 wins." << endl;
     else {
         cout << "Successfully placed down a pin." << endl;
     }
@@ -114,9 +114,9 @@ int main () {
     cin >> numPlayers;
 
     if (numPlayers == 1) {
-        board[0][0] = 2;
-        board[2][2] = 2;
-        board[1][1] = 2;
+        board[0][0] = 1;
+        board[2][2] = 1;
+        board[1][1] = 1;
         printBoard();
         checkOpponent();
         printBoard();
