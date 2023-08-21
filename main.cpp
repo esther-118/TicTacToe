@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -7,8 +9,49 @@ int board[3][3] = {0}; // this is the actual board that will be used
 // 0 means empty, 1 means player1, and 2 means player2
 // create a function to determine where to place the pin so the opponent does not win
 
-int stateOfGame = 0; // 1 means player1 won, 2 means player2 won
+int stateOfGame = 0; // 1 means player1 won, 2 means player2 won, 3 means stalemate
+int Gcount = 0; // count the number of times tried. if 9, game is stalemate.
+
+void check () {
+    if (board[0][0] == 2 && board[0][1] == 2 && board[0][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[1][0] == 2 && board[1][1] == 2 && board[1][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[2][0] == 2 && board[2][1] == 2 && board[2][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+
+    if (board[0][0] == 2 && board[1][0] == 2 && board[2][0] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[0][1] == 2 && board[1][1] == 2 && board[2][1] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[0][2] == 2 && board[1][2] == 2 && board[2][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+
+    if (board[0][0] == 2 && board[1][1] == 2 && board[2][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[0][2] == 2 && board[1][1] == 2 && board[2][0] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (Gcount >= 9) cout << "Game Over.";
+}
+
 int checkOpponent () { // return false if the game is over
+    srand((unsigned int)time(NULL));
     
     int col = 0;
     int count = 0;
@@ -38,6 +81,7 @@ int checkOpponent () { // return false if the game is over
         }
         if (count == 2 && empty != -1) {
             board[i][empty] = 2;
+            Gcount++;
             placed = true;
             goto END;
         }
@@ -67,13 +111,68 @@ int checkOpponent () { // return false if the game is over
         if (count == 2 && empty != -1) {
             board[rempty][empty] = 2;
             //cout << j << empty;
+            Gcount++;
             placed = true;
             goto END;
         } 
     }
 
     // diagonal lines
-    col = 0;
+    count = 0;
+    countME = 0;
+    int emptyCol;
+
+    if (board[0][0] == 1) count++;
+    if (board[0][0] == 0) {
+        emptyRow = 0;
+        emptyCol = 0;
+    }
+    if (board[1][1] == 1) count++;
+    if (board[1][1] == 0) {
+        emptyRow = 1;
+        emptyCol = 1;
+    }
+    if (board[2][2] == 1) count++;
+    if (board[2][2] == 0) {
+        emptyRow = 2;
+        emptyCol = 2;
+    }
+
+    if (count == 3) stateOfGame = 1;
+    if (count == 2) {
+        board[emptyRow][emptyCol] = 2;
+        Gcount++;
+        placed = true;
+        goto END;
+    }
+
+    count = 0;
+
+    if (board[0][2] == 1) count++;
+    if (board[0][2] == 0) {
+        emptyRow = 0;
+        emptyCol = 2;
+    }
+    if (board[1][1] == 1) count++;
+    if (board[1][1] == 0) {
+        emptyRow = 1;
+        emptyCol = 1;
+    }
+    if (board[2][0] == 1) count++;
+    if (board[2][0] == 0) {
+        emptyRow = 2;
+        emptyCol = 0;
+    }
+
+    if (count == 3) stateOfGame = 1;
+    if (count == 2) {
+        board[emptyRow][emptyCol] = 2;
+        Gcount++;
+        placed = true;
+        goto END;
+    }
+
+    /* col = 0;
     count = 0;
     empty = -1;
     emptyRow = 0;
@@ -91,10 +190,10 @@ int checkOpponent () { // return false if the game is over
     if (countME == 3) stateOfGame = 2;
     if (count == 2 && empty != -1) {
         board[emptyRow][empty] = 2;
+        count++;
         placed = true;
         goto END;
     }
-
     
     col = 2;
     count = 0;
@@ -111,41 +210,56 @@ int checkOpponent () { // return false if the game is over
     if (countME == 3) stateOfGame = 2;
     if (count == 2 && empty != -1) {
         board[emptyRow][empty] = 2;
+        count++;
         placed = true;
         goto END;
-    }
+    } */
 
     
     END:
+    check();
     if (stateOfGame == 1) {
-        cout << "Player 1 wins." << endl;
+        cout << "Player 1 wins!" << endl;
         return 0; // GAME OVER
     }
     else if (stateOfGame == 2) {
-        cout << "Player 2 wins." << endl;
+        cout << "Player 2 wins!" << endl;
         return 0;
     }
     else if (placed == true){
         cout << "Successfully placed down a pin." << endl;
         return 1; // PLACED DOWN
     }
+    else if (count >= 9) {
+        cout << "GAME OVER. STALEMATE." << endl;
+        return 0;
+    }
     else {
+        cout << "Did not find a winning pattern." << endl;
         return 2; // DID NOT PLACE DOWN
     }
 
 }
 
 void placeDown () {
+    srand((unsigned int)time(NULL));
     int rrow = 0;
     int rcol = 0;
     bool isPlacedDown = false;
+
     while (isPlacedDown == false) {
+        srand((unsigned int)time(NULL));
         rrow = rand()%2;
         rcol = rand()%2;
+        cout << "stuck";
         if (board[rrow][rcol] == 0) {
             board[rrow][rcol] = 2;
             isPlacedDown = true;
             cout << "Placed down at: " << rrow << ", " << rcol << endl;
+        }
+        if (Gcount == 9) {
+            stateOfGame = 3;
+            break;
         }
     }
 }
@@ -161,6 +275,7 @@ void printBoard () {
 }
 
 int main () {
+    srand((unsigned int)time(NULL));
     cout << "Welcome to Tic-Tac-Toe! Press 1 to play against the computer. Press 2 to play multiplayer." << endl;
 
     int numPlayers = 0;
@@ -181,15 +296,24 @@ int main () {
             
             while (stateOfGame == 0) {
                 place = checkOpponent();
-                if (place == 0) break;
+                if (place == 0) {
+                    printBoard();
+                    break;
+                }
                 if (place == 2) placeDown(); 
                 printBoard();
                 cout << "Your turn Player 1. Type in your move." << endl;
                 cout << "ROW: " << endl; cin >> row;
                 cout << "COL: " << endl; cin >> col;
                 board[row][col] = 1;
+                Gcount++;
                 printBoard();
             }
+            // when the game finishes
+            if (stateOfGame == 1) cout << "Player 1 wins." << endl;
+            if (stateOfGame == 2) cout << "Player 2 wins." << endl;
+            if (stateOfGame == 3) cout << "No winner." << endl;
+            
         }
         else {
             int rrow = rand()%2;
@@ -202,19 +326,17 @@ int main () {
                 cout << "ROW: " << endl; cin >> row;
                 cout << "COL: " << endl; cin >> col;
                 board[row][col] = 1;
+                Gcount++;
                 printBoard();
                 place = checkOpponent();
-                if (place == 0) break;
+                if (place == 0) {
+                    printBoard();
+                    break;
+                }
                 if (place == 2) placeDown(); 
                 printBoard();
             }
         }
-/*         board[0][1] = 1;
-        board[1][1] = 1;
-        //board[2][0] = 1;
-        printBoard();
-        checkOpponent();
-        printBoard(); */
     }
     else if (numPlayers == 2) {
 
