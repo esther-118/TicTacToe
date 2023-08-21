@@ -68,15 +68,10 @@ int checkOpponent () { // return false if the game is over
 
         for (int j = 0; j < 3; j++) {
             if (board[i][j] == 1) count++;
-            if (board[i][j] == 2) countME++;
             if (board[i][j] == 0) empty = j;
         }
         if (count == 3) {
             stateOfGame = 1;
-            goto END;
-        }
-        if (countME == 3) {
-            stateOfGame = 2;
             goto END;
         }
         if (count == 2 && empty != -1) {
@@ -94,7 +89,6 @@ int checkOpponent () { // return false if the game is over
         countME = 0;
         for (int j = 0; j < 3; j++) {
             if (board[j][i] == 1) count++;
-            if (board[j][i] == 2) countME++;
             if (board[j][i] == 0) {
                 empty = i;
                 rempty = j;
@@ -102,10 +96,6 @@ int checkOpponent () { // return false if the game is over
         }
         if (count == 3) {
             stateOfGame = 1;
-            goto END;
-        }
-        if (countME == 3) {
-            stateOfGame == 2;
             goto END;
         }
         if (count == 2 && empty != -1) {
@@ -119,7 +109,6 @@ int checkOpponent () { // return false if the game is over
 
     // diagonal lines
     count = 0;
-    countME = 0;
     int emptyCol;
 
     if (board[0][0] == 1) count++;
@@ -217,7 +206,6 @@ int checkOpponent () { // return false if the game is over
 
     
     END:
-    check();
     if (stateOfGame == 1) {
         cout << "Player 1 wins!" << endl;
         return 0; // GAME OVER
@@ -228,6 +216,7 @@ int checkOpponent () { // return false if the game is over
     }
     else if (placed == true){
         cout << "Successfully placed down a pin." << endl;
+        check();
         return 1; // PLACED DOWN
     }
     else if (count >= 9) {
@@ -262,6 +251,83 @@ void placeDown () {
             break;
         }
     }
+    check();
+}
+
+void checkPlayer1 () {
+    if (board[0][0] == 1 && board[0][1] == 1 && board[0][2] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+    if (board[1][0] == 1 && board[1][1] == 1 && board[1][2] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+    if (board[2][0] == 1 && board[2][1] == 1 && board[2][2] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+
+    if (board[0][0] == 1 && board[1][0] == 1 && board[2][0] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+    if (board[0][1] == 1 && board[1][1] == 1 && board[2][1] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+    if (board[0][2] == 1 && board[1][2] == 1 && board[2][2] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+
+    if (board[0][0] == 1 && board[1][1] == 1 && board[2][2] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+    if (board[0][2] == 1 && board[1][1] == 1 && board[2][0] == 1) {
+        stateOfGame = 1;
+        cout << "Player 1 wins." << endl;
+    }
+    if (Gcount >= 9) cout << "Game Over. Draw.";
+}
+
+void checkPlayer2 () {
+    if (board[0][0] == 2 && board[0][1] == 2 && board[0][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[1][0] == 2 && board[1][1] == 2 && board[1][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[2][0] == 2 && board[2][1] == 2 && board[2][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+
+    if (board[0][0] == 2 && board[1][0] == 2 && board[2][0] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[0][1] == 2 && board[1][1] == 2 && board[2][1] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[0][2] == 2 && board[1][2] == 2 && board[2][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+
+    if (board[0][0] == 2 && board[1][1] == 2 && board[2][2] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (board[0][2] == 2 && board[1][1] == 2 && board[2][0] == 2) {
+        stateOfGame = 2;
+        cout << "Player 2 wins." << endl;
+    }
+    if (Gcount >= 9) cout << "Game Over. Draw.";
 }
 
 void printBoard () {
@@ -339,7 +405,23 @@ int main () {
         }
     }
     else if (numPlayers == 2) {
-
+        int row;
+        int col;
+        while (stateOfGame == 0) {
+            cout << "Player 1 type in your move." << endl;
+            cout << "ROW: " << endl; cin >> row;
+            cout << "COL: " << endl; cin >> col;
+            board[row][col] = 1;
+            printBoard();
+            checkPlayer1();
+            if (stateOfGame != 0) break;
+            cout << "Player 2 type in your move." << endl;
+            cout << "ROW: " << endl; cin >> row;
+            cout << "COL: " << endl; cin >> col;
+            board[row][col] = 2;
+            printBoard();
+            checkPlayer2();
+        }
     }
     else {
 
